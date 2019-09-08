@@ -12,26 +12,30 @@ public class CannibalProblem {
 	static volatile int[] state = new int[CANNIBALS];
 	
 	static volatile Semaphore DINNER_TABLE = new Semaphore(0);
+	static volatile Semaphore DINNER_STATUS = new Semaphore(1);
+	
 	static String[] PARTS = {"Hand", "Leg", "Toe", "Torso", "Head", "Foot"};
 	
 	public static class Cannibal implements Runnable {
 
-		public void takes_body_part(Semaphore mtx) {
+		public void takes_body_part(Semaphore mtx, Semaphore table_status) {
 			try {
 				System.out.println("The cannibal is taking a body part.");
 				Thread.sleep(2000);
 				mtx.acquire();
 				System.out.println("The cannibal is eating a body part.");
+				if(mtx.availablePermits() == 0) {
+					wake_up_jack(table_status);
+				}
 			} catch (InterruptedException e) { }
 		}
 		
-		public void eat_body_part() {
-			
+		public void wake_up_jack(Semaphore table_status) {
+			try {
+				table_status.acquire();
+			} catch (InterruptedException e) { }
 		}
 		
-		public void wake_up_jack() {
-			
-		}
 		
 		@Override
 		public void run() {
@@ -42,7 +46,7 @@ public class CannibalProblem {
 	
 	 public static class JackTheRipper implements Runnable {
 		
-		public void fill_up_table(Semaphore mtx) {
+		public void fill_up_table(Semaphore mtx, Semaphore table_status) {
 			while(BODY_PARTS > mtx.availablePermits()) {
 				try {
 					Thread.sleep(3000);
@@ -54,7 +58,7 @@ public class CannibalProblem {
 				} catch (InterruptedException e) { }
 			}
 			System.out.println("Dinner is now ready!\n");
-			JACK_IS_KILLING = false;
+			table_status.release();
 		}
 
 		@Override
@@ -63,7 +67,7 @@ public class CannibalProblem {
 				try {
 					System.out.println("Jack is ripping off some victims...\n");
 					Thread.sleep(5000);
-					fill_up_table(DINNER_TABLE);
+					fill_up_table(DINNER_TABLE, DINNER_STATUS);
 				} catch (InterruptedException e) { }
 			}
 		}
