@@ -16,7 +16,7 @@ public class CannibalProblem {
 	
 	static String[] PARTS = {"Hand", "Leg", "Toe", "Torso", "Head", "Foot"};
 	
-	public static class Cannibal implements Runnable {
+	static class Cannibal implements Runnable {
 		
 		public static int id;
 		
@@ -45,13 +45,15 @@ public class CannibalProblem {
 		
 		@Override
 		public void run() {
+			while(JACK_IS_SLEEPING) {
 			System.out.println("Beware, the cannibal " + id + " is eating.");
 			take_body_part(DINNER_TABLE, DINNER_STATUS);
+			}
 		}
 		
 	}
 	
-	 public static class JackTheRipper implements Runnable {
+	 static class JackTheRipper implements Runnable {
 		
 		public void fill_up_table(Semaphore mtx, Semaphore table_status) {
 			while(BODY_PARTS > mtx.availablePermits()) {
@@ -66,6 +68,8 @@ public class CannibalProblem {
 			}
 			System.out.println("Dinner is now ready!\n");
 			table_status.release();
+			JACK_IS_KILLING = false;
+			JACK_IS_SLEEPING = true;
 		}
 
 		@Override
