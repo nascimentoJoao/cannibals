@@ -1,4 +1,3 @@
-package logical;
 
 import java.util.concurrent.Semaphore;
 
