@@ -17,8 +17,14 @@ public class CannibalProblem {
 	static String[] PARTS = {"Hand", "Leg", "Toe", "Torso", "Head", "Foot"};
 	
 	public static class Cannibal implements Runnable {
+		
+		public static int id;
+		
+		public Cannibal(int id) {
+			this.id = id;
+		}
 
-		public void takes_body_part(Semaphore mtx, Semaphore table_status) {
+		public void take_body_part(Semaphore mtx, Semaphore table_status) {
 			try {
 				System.out.println("The cannibal is taking a body part.");
 				Thread.sleep(2000);
@@ -39,7 +45,8 @@ public class CannibalProblem {
 		
 		@Override
 		public void run() {
-			
+			System.out.println("Beware, the cannibal " + id + " is eating.");
+			take_body_part(DINNER_TABLE, DINNER_STATUS);
 		}
 		
 	}
@@ -87,11 +94,12 @@ public class CannibalProblem {
 		 * 8. All cannibals start eating again.
 		 * 
 		 * */
-		Thread t = new Thread(new JackTheRipper());
-		t.start();
+		Thread jack = new Thread(new JackTheRipper());
+		jack.start();
 		
 		for(int i = 0; i < CANNIBALS; i++) {
-			
+			Thread cannibal = new Thread(new Cannibal(i));
+			cannibal.start();
 		}
 	}
 
