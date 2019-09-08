@@ -89,6 +89,10 @@ public class CannibalProblem {
 		 * */
 		Thread t = new Thread(new JackTheRipper());
 		t.start();
+		
+		for(int i = 0; i < CANNIBALS; i++) {
+			
+		}
 	}
 
 }
