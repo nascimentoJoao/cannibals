@@ -1,5 +1,3 @@
-package logical;
-
 import java.util.concurrent.Semaphore;
 
 public class CannibalProblem {
@@ -27,7 +25,7 @@ public class CannibalProblem {
 		public void take_body_part(Semaphore mtx, Semaphore table_status) {
 			try {
 				System.out.println("The cannibal is taking a body part.");
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				mtx.acquire();
 				System.out.println("The cannibal is eating a body part.");
 				if(mtx.availablePermits() == 0) {
@@ -58,12 +56,12 @@ public class CannibalProblem {
 		public void fill_up_table(Semaphore mtx, Semaphore table_status) {
 			while(BODY_PARTS > mtx.availablePermits()) {
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(1000);
 					System.out.println("Victim was quartered off! Yay!");
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					mtx.release();
 					System.out.println("A part of it was served. Dinner almost ready!\n");
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) { }
 			}
 			System.out.println("Dinner is now ready!\n");
