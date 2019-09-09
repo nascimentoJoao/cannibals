@@ -1,4 +1,3 @@
-package logical;
 
 import java.util.concurrent.*;
 
@@ -61,12 +60,12 @@ public class Filosofo {
 		public void run(){
 			while (true) {
 				try {
-					System.out.println("thread " + tid + " thinking...");
-					Thread.sleep(100);
-					System.out.println("thread " + tid + " hungry...");
+					System.out.println("thread " + tid + " thinking...\n");
+					Thread.sleep(2000);
+					System.out.println("thread " + tid + " hungry...\n");
 					take_forks(tid, mutex, s);
-					System.out.println("thread " + tid + " eating...");
-					Thread.sleep(100);
+					System.out.println("thread " + tid + " eating...\n");
+					Thread.sleep(2000);
 					put_forks(tid, mutex, s);
 				} catch (InterruptedException e) {
 				}
