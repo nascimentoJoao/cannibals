@@ -1,2 +1,2 @@
 # cannibals
-This repository contains a solution for the Cannibal's Dinner problem using Java.
+This repository contains a solution for the Cannibals Dinner problem using Java.
