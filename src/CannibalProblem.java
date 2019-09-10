@@ -5,7 +5,7 @@ public class CannibalProblem {
 	static int CANNIBALS = 5;
 	static int BODY_PARTS = 5;
 
-	static int REFERENCE_BODY_PARTS = 5;
+	static int REFERENCE_BODY_PARTS = 0;
 
 	static volatile Semaphore DINNER_STATUS = new Semaphore(0);
 	static volatile Semaphore DINNER_TABLE = new Semaphore(BODY_PARTS);
@@ -34,15 +34,18 @@ public class CannibalProblem {
 			try {
 				System.out.println("AVAILABLE PERMITS: "+ dinner.availablePermits());
 
-				if (dinner.availablePermits() >= REFERENCE_BODY_PARTS) {
-					System.out.println("The cannibal " + id + " is taking a body part.");
-					Thread.sleep(100);
+				while(true){
+
+				if (REFERENCE_BODY_PARTS == BODY_PARTS) {
+					/*System.out.println("The cannibal " + id + " is taking a body part.");
+					Thread.sleep(100);*/
 					dinner.acquire();
 					System.out.println("The cannibal " + id + " is eating a body part.");
 					REFERENCE_BODY_PARTS--;
 				} else {
 					wake_up_jack(DINNER_STATUS);
 				}
+			}	
 			} catch (InterruptedException e) {
 			}
 		}
