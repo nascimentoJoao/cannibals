@@ -5,10 +5,13 @@ public class Cannibal implements Runnable {
     private Semaphore table;
     private Semaphore tableStatus;
 
+    private Dekker dekker;
+
     public Cannibal(int cannibalId, Semaphore table, Semaphore tableStatus) {
         this.id           = cannibalId;
         this.table        = table;
         this.tableStatus  = tableStatus;
+        this.dekker = Dekker.construct();
     }
 
     public void eat() {
@@ -39,6 +42,7 @@ public class Cannibal implements Runnable {
     }
 
     private boolean canEat() {
+        
         return this.tableStatus.availablePermits() > 0;
     }
 
