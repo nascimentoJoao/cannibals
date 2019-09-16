@@ -4,21 +4,20 @@ public class Cannibal implements Runnable {
     private int id;
     private Semaphore table;
     private Semaphore tableStatus;
-
     private Dekker dekker;
 
-    public Cannibal(int cannibalId, Semaphore table, Semaphore tableStatus) {
+    public Cannibal(int cannibalId, Semaphore table, Semaphore tableStatus, Dekker dekker) {
         this.id           = cannibalId;
         this.table        = table;
         this.tableStatus  = tableStatus;
-        this.dekker = Dekker.construct();
+        this.dekker = dekker;
     }
 
     public void eat() {
         System.out.println("Cannibal " + this.id +" is eating");
         try {
             Thread.sleep(500);
-            this.table.acquire();
+            this.dekker.dekkerAcquire(this.id);
         }
         catch (Exception err) {
             System.out.println(err.getMessage());
@@ -42,8 +41,8 @@ public class Cannibal implements Runnable {
     }
 
     private boolean canEat() {
-        
-        return this.tableStatus.availablePermits() > 0;
+        return this.id == this.dekker.getTurn()
+            && this.tableStatus.availablePermits() > 0;
     }
 
     @Override
@@ -51,6 +50,8 @@ public class Cannibal implements Runnable {
         while (true) {
             if (hasFood() && canEat()) {
                 eat();
+            } else if (hasFood() && !canEat()) {
+            	this.dekker.updateArray(this.id);
             }
             else if (!hasFood() && canEat()) {
                 wakeUpCook();
