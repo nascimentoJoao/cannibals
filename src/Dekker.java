@@ -16,7 +16,7 @@ public final class Dekker {
 
 		this.turn_queue = new LinkedList<>();
 
-		this.turn = 1;
+		this.turn = 0;
 	}
 
 	public synchronized Boolean checkPosition(int pos) {
@@ -24,8 +24,12 @@ public final class Dekker {
 	}
 
 	public synchronized void updateArray(int pos) {
-		this.arrayForCannibalTurns[pos] = true;
-		this.turn_queue.offer(pos);
+
+		if (!this.turn_queue.contains(pos)) {
+			this.arrayForCannibalTurns[pos] = true;
+			this.turn_queue.offer(pos);
+		}
+
 	}
 
 	public synchronized Integer getTurn() {
@@ -33,24 +37,25 @@ public final class Dekker {
 	}
 
 	public synchronized void dekkerAcquire(int pos) {
-		
-		this.turn = this.turn_queue.poll();
-		
-		
-			this.arrayForCannibalTurns[pos] = true;
-			while (checkArray()) {
-				if (this.turn != pos) {
-					this.arrayForCannibalTurns[pos] = false;
-					while (this.turn != pos) {
-						System.out.println("entrou");
-					}
-					this.arrayForCannibalTurns[pos] = true;
-				}
 
-				this.turn = this.turn_queue.poll();
+		CannibalsFeast.BODY_PARTS--;
+		
+		System.out.println("It's cannibal " + this.turn + " turn to eat.\n");
+
+		this.turn = this.turn_queue.poll();
+
+		this.arrayForCannibalTurns[pos] = true;
+		while (checkArray()) {
+			if (this.turn != pos) {
 				this.arrayForCannibalTurns[pos] = false;
+				while (this.turn != pos) {
+				}
+				this.arrayForCannibalTurns[pos] = true;
 			}
-			CannibalsFeast.BODY_PARTS--;
+
+			this.turn = this.turn_queue.poll();
+			this.arrayForCannibalTurns[pos] = false;
+		}
 		
 	}
 
@@ -66,6 +71,14 @@ public final class Dekker {
 
 	public synchronized Boolean[] getDekkerArray() {
 		return this.arrayForCannibalTurns;
+	}
+
+	public synchronized Queue<Integer> getPriorityQueue() {
+		return this.turn_queue;
+	}
+
+	public void changeTurn(int pos) {
+		this.turn = pos;
 	}
 
 }

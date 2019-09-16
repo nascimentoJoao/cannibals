@@ -2,12 +2,10 @@ import java.util.concurrent.Semaphore;
 
 public class CannibalsFeast {
 
-	static int CANNIBALS 	= 2;
+	static int CANNIBALS = 4;
 	static int BODY_PARTS = 2;
 
 	static volatile Semaphore DINNER_STATUS = new Semaphore(1);
-	static volatile Semaphore DINNER_TABLE 	= new Semaphore(BODY_PARTS);
-	static volatile Dekker    DEKKER        = new Dekker();
 
 	public static void main(String[] args) {
 		/**
@@ -17,13 +15,14 @@ public class CannibalsFeast {
 		 * start eating again.
 		 * 
 		 */
-		
 
-		Thread jack = new Thread(JackTheRipper.construct(DINNER_TABLE, DINNER_STATUS, BODY_PARTS));
+		Dekker DEKKER = new Dekker();
+
+		Thread jack = new Thread(JackTheRipper.construct(DINNER_STATUS, BODY_PARTS, DEKKER));
 		jack.start();
 
 		for (int i = 0; i < CANNIBALS; i++) {
-			Thread cannibal = new Thread(new Cannibal(i, DINNER_TABLE, DINNER_STATUS, DEKKER));
+			Thread cannibal = new Thread(new Cannibal(i, DINNER_STATUS, DEKKER));
 			cannibal.start();
 		}
 
