@@ -1,4 +1,5 @@
 # cannibals
+
 This repository contains a solution for the Cannibal's Dinner problem using Java.
 
 The branch dev contains the solution using two semaphores, one of them being a binary semaphore.
