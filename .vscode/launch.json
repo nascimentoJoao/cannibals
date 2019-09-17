@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CannibalsFeast",
+            "request": "launch",
+            "mainClass": "CannibalsFeast",
+            "projectName": "CanibaisSisOp"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Filosofo",
+            "request": "launch",
+            "mainClass": "Filosofo",
+            "projectName": "CanibaisSisOp"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CannibalProblem",
+            "request": "launch",
+            "mainClass": "CannibalProblem",
+            "projectName": "CanibaisSisOp"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CannibalProblem",
+            "request": "launch",
+            "mainClass": "logical.CannibalProblem",
+            "projectName": "CanibaisSisOp"
+        }
+    ]
+}
