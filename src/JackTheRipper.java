@@ -1,50 +1,70 @@
 import java.util.concurrent.Semaphore;
 
 public class JackTheRipper implements Runnable {
-    
+
     private static JackTheRipper instance;
-    
-    private Semaphore table;
-    private Semaphore tableStatus;
-    private int maxBodyParts;
 
-    private JackTheRipper(Semaphore table, Semaphore tableStatus, int maxBodyParts) {
-        this.table        = table;
-        this.tableStatus  = tableStatus;
-        this.maxBodyParts = maxBodyParts;
-    }
+    private JackTheRipper() {}
 
-    public synchronized static JackTheRipper construct(Semaphore table, Semaphore tableStatus, int maxBodyParts) {
+    public synchronized static JackTheRipper construct() {
         if (instance == null) {
-            instance = new JackTheRipper(table, tableStatus, maxBodyParts);
+            instance = new JackTheRipper();
         }
         return instance;
     }
 
-    public void fillUpTable() {
-        int count = 1;
-        while (count <= this.maxBodyParts) {
-            System.out.println("Jack is filling up the table: " + count + " of " + this.maxBodyParts);
-            this.table.release();
-            count++;
+    public void fillTable() {
+        // int count = 1;
+
+        while (Feast.portions <= Feast.MAX_PORTIONS) {
+            System.out.println("Jack is filling up the table: " + Feast.portions + " of " +Feast.MAX_PORTIONS);
+            Feast.portions++;
         }
-        System.out.println("Dinner is now served, you filthy hungry bastards!");
-        this.tableStatus.release();
+
+        try {
+            Feast.tableStatus.release();
+        }
+        catch (Exception err) {}
+        
+        System.out.println("Dinner is served.");
     }
 
-    private boolean canWakeUp() {
-        return this.tableStatus.availablePermits() <= 0;
-    }
-
-    @Override
     public void run() {
+
         while(true) {
-            if (canWakeUp()) {
-                System.out.println();
-                fillUpTable();
-                System.out.println();
-                this.tableStatus.release();
+            if (Feast.tableStatus.availablePermits() < 0) {
+                fillTable();
             }
         }
     }
+
+    
+
+    // public void fillUpTable() {
+    // int count = 1;
+    // while (count <= this.maxBodyParts) {
+    // System.out.println("Jack is filling up the table: " + count + " of " +
+    // this.maxBodyParts);
+    // this.table.release();
+    // count++;
+    // }
+    // System.out.println("Dinner is now served, you filthy hungry bastards!");
+    // this.tableStatus.release();
+    // }
+
+    // private boolean canWakeUp() {
+    // return this.tableStatus.availablePermits() <= 0;
+    // }
+
+    // @Override
+    // public void run() {
+    // while(true) {
+    // if (canWakeUp()) {
+    // System.out.println();
+    // fillUpTable();
+    // System.out.println();
+    // this.tableStatus.release();
+    // }
+    // }
+    // }
 }
